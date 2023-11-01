@@ -1,0 +1,122 @@
+Тема: Окна ПВХ Выполнил: Стрелец Илья Сергеевич Группа: 153504
+
+Функциональные требования:
+
+1.Авторизация и управление пользователями: Регистрация новых пользователей с указанием имени, фамилии, адреса электронной почты и пароля; Вход в систему с использованием логина и пароля.
+
+2.Управление пользователями (CRUD): Создание новых пользователей с указанием основной информации; Просмотр информации о пользователях; Редактирование данных пользователя; Удаление данных пользователя.
+
+3.Система ролей: Определение различных ролей пользователей (например, клиент, сотрудник компании, доставщик и т.д.); Привязка ролей к пользователям; Управление правами доступа на основе ролей.
+
+4.Журналирование действий пользователя: Регистрация всех действий, совершаемых пользователями в системе; Запись даты, времени и идентификатора пользователя при каждом действии.
+
+5.Заказ окон: Регистрация всех действий, совершаемых пользователями в системе; Выбор необходимых окон и адреса доставки.
+
+6.Управление работой доставщиков: Контроль доставки продуктов по адресам и заказам.
+
+Описание сущночтей БД:
+1.Пользователь (User):
+    UserID (Идентификатор пользователя): INT (Primary Key)
+    Password (Пароль): varchar(255)
+    Login (Логин): varchar(50)
+    Trust_Rate (Рейтинг доверия): integer
+    Role: varchar(50)
+
+    Ограничения: Нет дополнительных ограничений
+    Связи: Связь с Client (One-to-One), Employe (One-to-One), AdminLog (One-to-Many)
+    
+  2.Клиент (Client):
+    ClientId (Идентификатор клиента): INT (Primary Key)
+    Client_Name (Имя Клиента): varchar(255)
+    Email (Почта): varchar(255)
+
+    Ограничения: Нет дополнительных ограничений.
+    Связи: Связь с User (One-to-One), ClientCategory (Many-to-One), Order (One-to-Many)
+
+  3.Лог (AdminLog):
+    AdminLogID (Идентификатор действия): INT (Primary Key)
+    Date (Дата и время действия): datetime
+    Action (Описание действия): varchar(50)
+
+    Ограничения: Нет дополнительных ограничений.
+    Связи: Связь с сущностью User (пользователь) Many-to-One.
+    
+  4.Категория Клиента (ClientCategory):
+    ClientCategoryID (Идентификатор категории): INT (Primary Key)
+    ClientCategory_Name (Имя категории): varchar(255)
+    Descr_Article (Описание категории): text
+    ClientCategory_Bonus (Скидка по категории): integer
+
+    Ограничения: Нет дополнительных ограничений.
+    Связи: Связь с User(Many-to-One)
+
+  5.Работник (Employe):
+    EmployeID (Идентификатор работника): INT (Primary Key)
+    First_Name (Имя): varchar(255)
+    Last_Name (Фамилия): varchar(255)
+    Email (Почта): varchar(255)
+    Phone (Телефон): varchar(32)
+    Salary (Зарплата): integer
+
+    Ограничения: Нет дополнительных ограничений.
+    Связи: Связь с User (One-to-One), с Deliver (One-to-One)
+
+  6.Доставщик (Deliver):
+    DeliverID(Идентификатор доставщика): INT (Primary Key)
+    Total_Late (На сколько всего опоздал): time
+    Completed_Orders (Сколько заказов совершил): integer
+    Uncompleted_Orders (Сколько не завершил): integer
+
+    Ограничения: Нет дополнительных ограничений.
+    Связи: Связь с Employe(One-to-One), Order через таблицу OrderDelivers(Many-to-Many)
+
+  7.Заказ (Order):
+    OrderID (Идентификатор заказа): INT (Primary Key)
+    Repayment_Method (Метод оплаты): varchar(255)
+    Cost (Цена): integer
+    Delivery_Time (Время доставки): datetime
+    Was_Delivered (Был ли доставлен): bool
+    Adress (Адресс): varchar(255)
+    Description (Описание): text
+    Feedback (Пожелание): text
+
+    Ограничения: Нет дополнительных ограничений.
+    Связи: Связь с Client(Many-to-One), PromoCode (Many-to-One), OrderItem(One-to-Many), Deliver через таблицу OrderDelivers(Many-to-Many)
+
+  8.Промокоды (Promocodes):
+    PromoCodeID(Идентификатор промокода): INT (Primary Key)
+    Name (Название): varchar(255)
+    Code (Код): varchar(50)
+    Active (Активен ли): bool
+    DiscountNumber (Размер скидки): integer
+
+    Ограничения: Нет дополнительных ограничений.
+    Связи: Связь с Order (One-to-Many)
+
+  9.Заказанный товар (OrderItem):
+    OrderItemID (Идентификатор типа работника): INT (Primary Key)
+    Amount (Количество): integer
+
+    Ограничения: Нет дополнительных ограничений.
+    Связи: Связь с Windows(Many-to-One), Order (Many-to-One)
+
+  10.Окно (Windows):
+    WindowID(Идентификатор окна): INT (Primary Key)
+    Flaps (Закрылки): integer
+    Opening_Type (Тип открытия): varchar(255)
+    СameraQuantity (Количество камер): integer
+    CameraSize (Размер камер): integer
+    WindowSize (Размер окна): integer
+    Cost (Цена за единицу): integer
+
+    Ограничения: Нет дополнительных ограничений.
+    Связи: Связь с OrderItem(One-to-Many), WareHouse(Many-to-One)
+
+   11.Склад (WareHouse)
+    WareHouseID(Идентификатор склада): INT (Primary Key)
+    Working_Hours (Рабочие часы):  varchar(255)
+    Phone (Телефон):  varchar(32)
+    Adress (Адресс):  varchar(255)
+
+    Ограничения: Нет дополнительных ограничений.
+    Связи: Связь с Windiws(One-to-Many)

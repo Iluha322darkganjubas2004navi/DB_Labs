@@ -1,0 +1,66 @@
+CREATE SEQUENCE students_id_seq START WITH 1 INCREMENT BY 1;
+
+create or replace NONEDITIONABLE TRIGGER auto_increment_id_students
+BEFORE INSERT ON STUDENTS
+FOR EACH ROW
+BEGIN
+    IF :NEW.ID IS NULL THEN
+        :NEW.ID := students_id_seq.NEXTVAL;
+    END IF;
+END;    
+CREATE SEQUENCE groups_id_seq START WITH 1 INCREMENT BY 1;
+
+create or replace NONEDITIONABLE TRIGGER auto_increment_id_groups
+BEFORE INSERT ON GROUPS
+FOR EACH ROW
+BEGIN
+    IF :NEW.ID IS NULL THEN
+        :NEW.ID := groups_id_seq.NEXTVAL;
+    END IF;
+END;
+
+create or replace NONEDITIONABLE TRIGGER groups_id_unique
+BEFORE INSERT ON GROUPS
+FOR EACH ROW
+DECLARE
+    v_count NUMBER;
+BEGIN
+      
+   
+        SELECT COUNT(*) INTO v_count FROM GROUPS
+        WHERE ID = :NEW.ID;
+        IF v_count > 0 THEN
+            RAISE_APPLICATION_ERROR(-20202, 'ID '||:NEW.ID||' IS ALREADY EXISTS. PLEASE CHECK.');
+        END IF;
+    
+END;
+
+
+create or replace NONEDITIONABLE TRIGGER studens_id_unique
+BEFORE INSERT ON STUDENTS
+FOR EACH ROW
+DECLARE
+    v_count NUMBER;
+BEGIN
+    SELECT COUNT(*) INTO v_count FROM STUDENTS
+    WHERE ID = :NEW.ID;
+    IF V_COUNT > 0 THEN
+        RAISE_APPLICATION_ERROR(-20202, 'ID '||:NEW.ID||' IS ALREADY EXISTS. PLEASE CHECK.');
+    END IF;
+END;
+
+create or replace NONEDITIONABLE TRIGGER groups_name_unique
+BEFORE INSERT ON GROUPS
+FOR EACH ROW
+DECLARE
+    v_count NUMBER;
+BEGIN
+    SELECT COUNT(*) INTO v_count FROM GROUPS
+    WHERE NAME = :NEW.NAME;
+    IF V_COUNT > 0 THEN
+        RAISE_APPLICATION_ERROR(-20202, 'NAME '||:NEW.NAME||' IS ALREADY EXISTS. PLEASE CHECK.');
+    END IF;
+END;
+
+ALTER SEQUENCE groups_id_seq RESTART
+ALTER SEQUENCE students_id_seq RESTART

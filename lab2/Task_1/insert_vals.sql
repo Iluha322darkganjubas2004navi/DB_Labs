@@ -1,7 +1,7 @@
 insert into groups(id,name,c_val) values (null,'153504',0)
 
 
-insert into students (id,name,group_id) values(null, 'kiryl mam4',1)
+insert into students (id,name,group_id) values(null, 'Silniy chel',1)
 
 DECLARE
   n INTEGER := 10;

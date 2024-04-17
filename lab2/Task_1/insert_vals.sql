@@ -3,6 +3,9 @@ insert into groups(id,name,c_val) values (null,'153504',0)
 DELETE FROM groups WHERE id = 1;
 delete_students_by_name('Имя_студента_для_удаления');
 ALTER TRIGGER trigger_update_c_val ENABLE;
+BEGIN
+    restore_students_log(TO_TIMESTAMP('2024-04-17 12:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+END;
 
   
 insert into students (id,name,group_id) values(null, 'Silniy chel',1)
